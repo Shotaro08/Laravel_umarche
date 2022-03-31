@@ -22,6 +22,7 @@
                             <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Name</th>
                             <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">email</th>
                             <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">created</th>
+                            <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -30,6 +31,9 @@
                                 <td class="px-4 py-3 ">{{ $owner->name }}</td>
                                 <td class="px-4 py-3 ">{{ $owner->email }}</td>
                                 <td class="px-4 py-3 ">{{ $owner->created_at->diffForHumans() }}</td>
+                                <td class="px-4 py-3">
+                                  <button onclick="location.href='{{ route('admin.owners.edit', ['owner'  => $owner->id] )}}'"class="text-white bg-purple-400 border-0 py-2 px-4 focus:outline-none hover:bg-purple-500 rounded">編集</button>
+                                </td>
                               </tr>
                             @endforeach
                         </tbody>
