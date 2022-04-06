@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use APP\Http\Requests\UploadImageRequest;
 
 class ShopController extends Controller
 {
@@ -50,7 +51,7 @@ class ShopController extends Controller
 
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request) //UploadImageRequestがはいってバリデーション
     {
         $imageFile = $request->image;
         if(!is_null($imageFile) && $imageFile->isValid()){
