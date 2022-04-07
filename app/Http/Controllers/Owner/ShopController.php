@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use APP\Http\Requests\UploadImageRequest;
+use App\Services\ImageService;
 
 class ShopController extends Controller
 {
@@ -51,18 +52,19 @@ class ShopController extends Controller
 
     }
 
-    public function update(Request $request) //UploadImageRequestがはいってバリデーション
+    public function update(Request $request) //本当はUploadImageRequestがはいってバリデーション
     {
         $imageFile = $request->image;
         if(!is_null($imageFile) && $imageFile->isValid()){
             // Storage::putFile('public/shops', $imageFile);
 
-            $fileName = uniqid(rand() . '_');
-            $extension = $imageFile->extension();
-            $fileNameToStore = $fileName. '.' . $extension;
-            $resizedImage = Image::make($imageFile)->resize(1920, 1080)->encode();
+            // $fileName = uniqid(rand() . '_');
+            // $extension = $imageFile->extension();
+            // $fileNameToStore = $fileName. '.' . $extension;
+            // $resizedImage = Image::make($imageFile)->resize(1920, 1080)->encode();
 
-            Storage::put('public/shops/' . $fileNameToStore, $resizedImage);
+            // Storage::put('public/shops/' . $fileNameToStore, $resizedImage);
+            $fileNameToStore = ImageService::upload($imageFile, 'shops');
 
         }
 
