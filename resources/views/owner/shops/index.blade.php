@@ -23,7 +23,7 @@
                                     </div>
                                 </a>
                                 <div class="text-xl ">{{ $shop->name }}</div>
-                                <x-shop-thumnail :filename="$shop->filename"/>
+                                <x-thumnail :filename="$shop->filename" type="shops" />
                             </div>
                         @endforeach
                         </div>
