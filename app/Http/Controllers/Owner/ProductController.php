@@ -23,7 +23,8 @@ class ProductController extends Controller
             // dd(Auth::id());
 
             $id = $request->route()->parameter('product');
-            if (!is_null($id)) {
+            if (!is_null($id))
+            {
                 $productsOwnerId = Product::findOrFail($id)->shop->owner->id;
                 $productId = (int)$productsOwnerId;
                 if ($productId !== Auth::id()) {
@@ -42,9 +43,19 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Owner::findOrFail(Auth::id())->shop->product;
+        // $products = Owner::findOrFail(Auth::id())->shop->product;
 
-        return view('owner.products.index', compact('products'));
+        $ownerInfo = Owner::with('shop.product.imageFirst')
+        ->where('id', Auth::id())->get();
+
+        // foreach($ownerInfo as $owner){
+        //     dd($owner->shop->product);
+
+        // }
+
+
+
+        return view('owner.products.index', compact('ownerInfo'));
     }
 
     /**
