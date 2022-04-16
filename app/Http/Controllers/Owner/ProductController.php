@@ -48,7 +48,6 @@ class ProductController extends Controller
 
         $ownerInfo = Owner::with('shop.product.imageFirst')
         ->where('id', Auth::id())->get();
-
         // foreach($ownerInfo as $owner){
         //     dd($owner->shop->product);
 
@@ -88,7 +87,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**
