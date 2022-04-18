@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UploadImageRequest;
+use App\Http\Requests\UploadImageRequest as UploadImageRequest;
 use App\Services\ImageService;
 use Illuminate\Support\Facades\Storage;
 
@@ -61,7 +61,7 @@ class ImageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) //UploadImageRequest
+    public function store(UploadImageRequest $request) //UploadImageRequest
     {
         $imageFiles = $request->file('files');
 
@@ -98,7 +98,7 @@ class ImageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UploadImageRequest $request, $id)
     {
         $request->validate([
             'title' => ['string', 'max:50'],
