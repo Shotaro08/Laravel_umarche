@@ -94,6 +94,7 @@ Route::middleware('auth:owners')->group(function () {
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])->middleware('auth:owners');
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:owners')
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->middleware('auth:owners')
                 ->name('logout');
 });
