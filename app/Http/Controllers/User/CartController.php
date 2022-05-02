@@ -18,26 +18,23 @@ class CartController extends Controller
         $products = $user->products;
         $totalPrice = 0;
 
-        foreach($products as $product){
+        foreach ($products as $product) {
             $totalPrice += $product->price * $product->pivot->quantity;
         }
 
 
         return view('user.cart', compact('products', 'totalPrice'));
-
     }
 
     public function add(Request $request)
     {
         $itemInCart = Cart::where('product_id', $request->product_id)
-        ->where('user_id', Auth::id())->first();
+            ->where('user_id', Auth::id())->first();
 
-        if($itemInCart)
-        {
+        if ($itemInCart) {
             $itemInCart->quantity += $request->quantity;
             $itemInCart->save();
-
-        }else{
+        } else {
             Cart::create([
                 'user_id' => Auth::id(),
                 'product_id' => $request->product_id,
@@ -53,7 +50,6 @@ class CartController extends Controller
         Cart::where('product_id', $id)->where('user_id', Auth::id())->delete();
 
         return redirect()->route('user.cart.index');
-
     }
 
     public function checkout()
@@ -63,15 +59,13 @@ class CartController extends Controller
 
         $lineItems = [];
 
-        foreach($products as $product)
-        {
+        foreach ($products as $product) {
             $quantity = '';
             $quantity = Stock::where('product_id', $product->id)->sum('quantity');
 
-            if($product->pivot->quantity > $quantity){
+            if ($product->pivot->quantity > $quantity) {
                 return redirect()->route('user.cart.index');
-
-            }else{
+            } else {
                 $lineItem = [
                     'name' => $product->name,
                     'description' => $product->information,
@@ -82,12 +76,11 @@ class CartController extends Controller
 
                 array_push($lineItems, $lineItem);
             }
-
         }
 
         // dd($lineItems);
 
-        foreach($products as $product){
+        foreach ($products as $product) {
             Stock::create([
                 'product_id' => $product->id,
                 'type' => Common::PRODUCT_LIST['reduce'],
@@ -104,13 +97,12 @@ class CartController extends Controller
             'line_items' => [$lineItems],
             'mode' => 'payment',
             'success_url' => route('user.cart.success'),
-            'cancel_url' => route('user.cart.index'),
+            'cancel_url' => route('user.cart.cancel'),
         ]);
 
         $publicKey = env('STRIPE_PUBLIC_KEY');
 
         return view('user.checkout', compact('session', 'publicKey'));
-
     }
 
     public function success()
@@ -118,6 +110,20 @@ class CartController extends Controller
         Cart::where('user_id', Auth::id())->delete();
 
         return redirect()->route('user.items.index');
+    }
 
+    public function cancel()
+    {
+        $user = User::findOrFail(Auth::id());
+
+        foreach ($user->products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => Common::PRODUCT_LIST['add'],
+                'quantity' => $product->pivot->quantity,
+            ]);
+        }
+
+        return redirect()->route('user.cart.index');
     }
 }
