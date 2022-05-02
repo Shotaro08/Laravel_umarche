@@ -85,6 +85,8 @@ class CartController extends Controller
 
         }
 
+        // dd($lineItems);
+
         foreach($products as $product){
             Stock::create([
                 'product_id' => $product->id,
@@ -93,13 +95,13 @@ class CartController extends Controller
             ]);
         }
 
-        dd('test');
+        // dd('test');
 
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-        $session = \Stripe\PaymentIntent::create([
+        $session = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
-            'lineItems' => [$lineItems],
+            'line_items' => [$lineItems],
             'mode' => 'payment',
             'success_url' => route('user.items.index'),
             'cancel_url' => route('user.cart.index'),
