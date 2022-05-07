@@ -11,6 +11,9 @@ use App\Http\Controllers\Owner\Auth\NewPasswordController;
 use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
+use App\Http\Controllers\Owner\shopController;
+use App\Http\Controllers\Owner\ImageController;
+use App\Http\Controllers\Owner\ProductController;
 
 
 
@@ -25,9 +28,25 @@ use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 |
 */
 
-Route::get('/', function () {
-    return view('owner.welcome');
-});
+// Route::get('/', function () {
+//     return view('owner.welcome');
+// });
+
+Route::prefix('shops')
+    ->middleware('auth:owners')
+    ->group(function () {
+
+        Route::get('index', [shopController::class, 'index'])->name('shops.index');
+        Route::get('edit/{shop}', [shopController::class, 'edit'])->name('shops.edit');
+        Route::post('update/{shop}', [shopController::class, 'update'])->name('shops.update');
+    });
+
+Route::resource('images', ImageController::class)
+->middleware('auth:owners')->except(['show']);
+
+Route::resource('products', ProductController::class)
+->middleware('auth:owners')->except(['show']);
+
 
 Route::get('/dashboard', function () {
     return view('owner.dashboard');
@@ -36,10 +55,10 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-                ->name('register');
+    // Route::get('register', [RegisteredUserController::class, 'create'])
+    //             ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    // Route::post('register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
@@ -75,6 +94,7 @@ Route::middleware('auth:owners')->group(function () {
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])->middleware('auth:owners');
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:owners')
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->middleware('auth:owners')
                 ->name('logout');
 });
