@@ -37,12 +37,16 @@ class ItemController extends Controller
 
         $products = Product::availableItems()
         ->selectCategory($request->category ?? '0')
+        ->searchKeyword($request->keyword)
         ->sortOrder($request->sort)
         ->paginate($request->pagination ?? '20');
 
         $categories = PrimaryCategory::with('secondary')->get();
 
-        return view('user.index', compact('products', 'categories'));
+        $keyword = $request->keyword;
+
+
+        return view('user.index', compact('products', 'categories', 'keyword'));
     }
 
     public function show ($id)
